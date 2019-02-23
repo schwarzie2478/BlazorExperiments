@@ -1,0 +1,39 @@
+﻿@page "/app"
+
+@using Example01.Models
+@inject Example_01.Services.ApplicationState state
+<H1>Application Editor</H1>
+
+<table>
+    <thead><tr><th>Application</th><th>Description</th></tr></thead>
+    <tr>
+        <td>@myApplication.Name</td>
+        <td> <input id=Description bind=@myApplication.Description /></td>
+    </tr>
+</table>
+<H1>The description is =  @myApplication.Description</H1>
+<button onclick="@(e => Console.WriteLine("Hello, world!"))">Say hello</button>
+
+@functions
+{
+    Application myApplication = new Application()
+    {
+        Name = "My Second Application",
+        Description = "This should be enough of a description"
+    };
+
+    protected override void OnInit()
+    {
+        state.OnChange += StateHasChanged;
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        await state.GetApplications();
+        foreach (var app in state.ApplicationSearchResult)
+        {
+            myApplication = app;
+            break;
+        }
+    }
+}

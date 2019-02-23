@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Example01BackEnd
 {
@@ -28,10 +29,15 @@ namespace Example01BackEnd
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddCors();
 
             services.AddMvc()
                 .AddNewtonsoftJson();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
 
             var connection = @"Server=(localdb)\mssqllocaldb;Database=Example01;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<ExampleDbContext>
@@ -61,6 +67,16 @@ namespace Example01BackEnd
             });
 
             app.UseAuthorization();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
+            app.UseCors(builder =>
+    builder.WithOrigins("http://localhost:65320")
+           .AllowAnyHeader()
+    );
         }
     }
 }
