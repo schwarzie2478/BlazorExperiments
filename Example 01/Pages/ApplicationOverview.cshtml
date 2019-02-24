@@ -1,4 +1,4 @@
-﻿@page "/app"
+﻿@page "/application"
 
 @using Example01.Models
 @inject Example_01.Services.ApplicationState state
@@ -6,34 +6,44 @@
 
 <table>
     <thead><tr><th>Application</th><th>Description</th></tr></thead>
-    <tr>
-        <td>@myApplication.Name</td>
-        <td> <input id=Description bind=@myApplication.Description /></td>
-    </tr>
+    @foreach (var application in myApplications)
+    {
+     <tr>
+        <td>@application.Name</td>
+        <td> <input id=Description bind=@application.Description /></td>
+    </tr>       
+    }
+
 </table>
-<H1>The description is =  @myApplication.Description</H1>
-<button onclick="@(e => Console.WriteLine("Hello, world!"))">Say hello</button>
+
+<button onclick="@(async () => await OnCreateApplication())">Add Application</button>
 
 @functions
 {
-    Application myApplication = new Application()
-    {
-        Name = "My Second Application",
-        Description = "This should be enough of a description"
-    };
+    IEnumerable<Application>  myApplications = new List<Application>();
 
     protected override void OnInit()
     {
         state.OnChange += StateHasChanged;
     }
 
-    protected override async Task OnInitAsync()
+    protected async Task RefreshApplicaton()
     {
         await state.GetApplications();
-        foreach (var app in state.ApplicationSearchResult)
-        {
-            myApplication = app;
-            break;
-        }
+        myApplications = state.ApplicationSearchResult;
+        StateHasChanged();        
+    }
+    protected override async Task OnInitAsync()
+    {
+        await RefreshApplicaton();
+    }
+    protected async Task  OnCreateApplication()
+    {
+        var application = new Application();
+        application.Name = DateTime.Now.Ticks.ToString();
+        application.Description = @"Applicaiton Created at {DateTime.Now.ToString()}!";
+        await state.CreateApplicaton(application);
+        await RefreshApplicaton();
+
     }
 }

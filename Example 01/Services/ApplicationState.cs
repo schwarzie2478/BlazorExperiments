@@ -43,6 +43,13 @@ namespace Example_01.Services
             NotifyStateChanged();
         }
 
+        public async Task CreateApplicaton(Application newApplication)
+        {
+                        ApplicationsServiceUrl = "https://localhost:5001";
+                        await http.SendJsonAsync(HttpMethod.Post, $"{ApplicationsServiceUrl}/api/application", newApplication);
+                        NotifyStateChanged();
+        }
+
         private void NotifyStateChanged() => OnChange?.Invoke();
     }
 }
