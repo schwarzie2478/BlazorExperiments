@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Example01.Models
 {
@@ -6,7 +7,7 @@ namespace Example01.Models
     {
         public Application()
         {
-            
+            ApplicationRoles = new HashSet<ApplicationRole>();
         }
         public Application( string name, string description)
         {
@@ -16,5 +17,6 @@ namespace Example01.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public ICollection<ApplicationRole> ApplicationRoles { get; private set;}
     }
 }

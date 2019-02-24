@@ -43,6 +43,9 @@ namespace Example01BackEnd
             services.AddDbContext<ExampleDbContext>
                 (options => options.UseSqlServer(connection));
 
+    services.AddHealthChecks()
+        .AddSqlServer(connection);
+               services.AddHealthChecksUI();
 
         }
 
@@ -72,7 +75,8 @@ namespace Example01BackEnd
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-
+            
+                    app.UseHealthChecksUI();
             app.UseCors(builder =>
     builder.WithOrigins("http://localhost:65320")
            .AllowAnyHeader()

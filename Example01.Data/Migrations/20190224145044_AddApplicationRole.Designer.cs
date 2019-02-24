@@ -4,14 +4,16 @@ using Example01.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Example01.Data.Migrations
 {
     [DbContext(typeof(ExampleDbContext))]
-    partial class ExampleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190224145044_AddApplicationRole")]
+    partial class AddApplicationRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

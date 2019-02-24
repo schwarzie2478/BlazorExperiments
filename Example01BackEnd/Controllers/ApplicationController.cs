@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Example01.Models;
+using Example01.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,24 +14,29 @@ namespace Example01BackEnd.Controllers
     [Route("api/[controller]")]
     public class ApplicationController : Controller
     {
+        private ExampleDbContext _db;
+        
+        public ApplicationController(ExampleDbContext dBContext)
+        {
+            _db = dBContext;
+        }
         // GET: api/<controller>  
         [HttpGet]
-        public IEnumerable<Application> Get()
+        public async Task<IEnumerable<Application>> OnGetAsync()
         {
-            return new List<Application>() { new Application("TestApplication","Testing from GetApplications") };
+            return await _db.Applications.ToListAsync();
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public Application Get(int id)
-        {
-            return new Application("SingleApplication","Testing from Get");
-        }
+        public async Task<Application> OnGetAsync(int id) => await _db.Applications.FindAsync(id);
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]Application value)
+        public async Task OnPostAsync([FromBody]Application value)
         {
+            _db.Applications.Add(value);
+            await _db.SaveChangesAsync();
         }
 
         // PUT api/<controller>/5

@@ -8,9 +8,9 @@ namespace Example01.Data
 {
     public class ExampleDbContext: DbContext
     {
-        DbSet<Application> Applications { get; set; }
+        public DbSet<Application> Applications { get; set; }
 
-        public ExampleDbContext(DbContextOptions options ):base(options)
+        public ExampleDbContext(DbContextOptions<ExampleDbContext> options ):base(options)
         {
         }
     }
