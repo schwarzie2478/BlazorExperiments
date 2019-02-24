@@ -47,8 +47,12 @@ namespace Example01BackEnd.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
+            var application = new Application();
+            application.Id = id;
+            _db.Applications.Attach(application).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
         }
     }
 }

@@ -49,6 +49,12 @@ namespace Example_01.Services
                         await http.SendJsonAsync(HttpMethod.Post, $"{ApplicationsServiceUrl}/api/application", newApplication);
                         NotifyStateChanged();
         }
+        public async Task DeleteApplication(int id)
+        {
+            ApplicationsServiceUrl = "https://localhost:5001";
+            await http.SendJsonAsync(HttpMethod.Delete, $"{ApplicationsServiceUrl}/api/application/{id}", id);
+            NotifyStateChanged();
+        }
 
         private void NotifyStateChanged() => OnChange?.Invoke();
     }

@@ -80,6 +80,7 @@ namespace Example01BackEnd
             app.UseCors(builder =>
     builder.WithOrigins("http://localhost:65320")
            .AllowAnyHeader()
+           .AllowAnyMethod()
     );
         }
     }
