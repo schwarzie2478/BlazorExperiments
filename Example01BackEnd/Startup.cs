@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Example01.Data;
 
@@ -28,7 +29,12 @@ namespace Example01BackEnd
     {
         public Startup(IConfiguration configuration)
         {
+
+        }
+        public Startup(IConfiguration configuration , ILogger<Startup> logger)
+        {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -36,6 +42,7 @@ namespace Example01BackEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
 
             services.AddCors();
 
@@ -54,6 +61,11 @@ namespace Example01BackEnd
             services.AddHealthChecks()
                 .AddDbContextCheck<ExampleDbContext>("localDb");
 
+
+            foreach (var service in services)
+            {
+                 System.Diagnostics.Debug.WriteLine ($"Service: {service.ServiceType.FullName}\n      Lifetime: {service.Lifetime}\n      Instance: {service.ImplementationType?.FullName}");
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,7 +99,7 @@ namespace Example01BackEnd
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-            
+
 
             app.UseCors(builder =>
     builder.WithOrigins("http://localhost:65320")
