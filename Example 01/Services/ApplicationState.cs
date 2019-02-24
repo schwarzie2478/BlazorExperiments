@@ -12,9 +12,22 @@ namespace Example_01.Services
     {
         public ApplicationState()
         {
-            
+
         }
-        public string ApplicationsServiceUrl { get; set; }
+        private string _url = "";
+        public string ApplicationsServiceUrl
+        {
+            get
+            {
+                if (_url == "")
+                    _url = "https://localhost:5001";
+                return _url;
+            }
+            set
+            {
+                _url = value;
+            }
+        }
 
         public IEnumerable<Application> ApplicationSearchResult { get; private set; }
         public bool SearchInProgress { get; private set; }
@@ -33,7 +46,7 @@ namespace Example_01.Services
 
         public async Task GetApplications()
         {
-            ApplicationsServiceUrl = "https://localhost:5001";
+
             SearchInProgress = true;
             NotifyStateChanged();
 
@@ -45,17 +58,24 @@ namespace Example_01.Services
 
         public async Task CreateApplicaton(Application newApplication)
         {
-                        ApplicationsServiceUrl = "https://localhost:5001";
-                        await http.SendJsonAsync(HttpMethod.Post, $"{ApplicationsServiceUrl}/api/application", newApplication);
-                        NotifyStateChanged();
+
+            await http.SendJsonAsync(HttpMethod.Post, $"{ApplicationsServiceUrl}/api/application", newApplication);
+            NotifyStateChanged();
         }
         public async Task DeleteApplication(int id)
         {
-            ApplicationsServiceUrl = "https://localhost:5001";
+
             await http.SendJsonAsync(HttpMethod.Delete, $"{ApplicationsServiceUrl}/api/application/{id}", id);
             NotifyStateChanged();
         }
 
+        public async Task UpdateApplication(Application application)
+        {
+
+            await http.SendJsonAsync(HttpMethod.Put, $"{ApplicationsServiceUrl}/api/application/{application.Id}", application); 
+            NotifyStateChanged();
+
+        }
         private void NotifyStateChanged() => OnChange?.Invoke();
     }
 }

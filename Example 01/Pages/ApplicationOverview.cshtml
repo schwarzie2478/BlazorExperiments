@@ -9,9 +9,12 @@
     @foreach (var application in myApplications)
     {
      <tr>
-        <td>@application.Name</td>
+        <td> <input id=Description bind=@application.Name /></td>
         <td> <input id=Description bind=@application.Description /></td>
-        <td><button onclick="@(async () => await OnDeleteApplications(application.Id))">Delete</button></td>
+        <td>
+            <button onclick="@(async () => await OnUpdateApplication(application))">Update</button>
+            <button onclick="@(async () => await OnDeleteApplications(application.Id))">Delete</button>
+            </td>
     </tr>       
     }
 
@@ -28,7 +31,7 @@
         state.OnChange += StateHasChanged;
     }
 
-    protected async Task RefreshApplicatons()
+    protected async Task RefreshApplications()
     {
         await state.GetApplications();
         myApplications = state.ApplicationSearchResult;
@@ -36,7 +39,7 @@
     }
     protected override async Task OnInitAsync()
     {
-        await RefreshApplicatons();
+        await RefreshApplications();
     }
     protected async Task  OnCreateApplication()
     {
@@ -44,12 +47,17 @@
         application.Name = DateTime.Now.Ticks.ToString();
         application.Description = @"Applicaiton Created at {DateTime.Now.ToString()}!";
         await state.CreateApplicaton(application);
-        await RefreshApplicatons();
+        await RefreshApplications();
 
     }
     protected async Task OnDeleteApplications(int id)
     {
         await state.DeleteApplication(id);
-        await RefreshApplicatons();
+        await RefreshApplications();
+    }
+    protected async Task OnUpdateApplication(Application application)
+    {
+        await state.UpdateApplication(application);
+        await RefreshApplications();
     }
 }

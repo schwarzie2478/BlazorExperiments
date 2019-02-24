@@ -41,8 +41,10 @@ namespace Example01BackEnd.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Application value)
+        public async Task OnPutAsync(int id, [FromBody]Application value)
         {
+            _db.Applications.Attach(value).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
         }
 
         // DELETE api/<controller>/5
