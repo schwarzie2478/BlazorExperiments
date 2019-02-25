@@ -4,3 +4,5 @@ bin
 obj
 *.csproj.user
 Example01BackEnd/healthchecksdb
+Example 01/wwwroot/css/materialize.min.css
+Example 01/wwwroot/css/materialize.css

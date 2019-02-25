@@ -12,15 +12,15 @@
         <td> <input id=Description bind=@application.Name /></td>
         <td> <input id=Description bind=@application.Description /></td>
         <td>
-            <button onclick="@(async () => await OnUpdateApplication(application))">Update</button>
-            <button onclick="@(async () => await OnDeleteApplications(application.Id))">Delete</button>
+            <button class="waves-effect waves-light btn" onclick="@(async () => await OnUpdateApplication(application))">Update</button>
+            <button class="waves-effect waves-light btn" onclick="@(async () => await OnDeleteApplications(application.Id))">Delete</button>
             </td>
     </tr>       
     }
 
 </table>
 
-<button onclick="@(async () => await OnCreateApplication())">Add Application</button>
+<button class="waves-effect waves-light btn" onclick="@(async () => await OnCreateApplication())">Add Application</button>
 
 @functions
 {
@@ -45,7 +45,7 @@
     {
         var application = new Application();
         application.Name = DateTime.Now.Ticks.ToString();
-        application.Description = @"Applicaiton Created at {DateTime.Now.ToString()}!";
+        application.Description = $"Applicaiton Created at {DateTime.Now.ToString()}!";
         await state.CreateApplicaton(application);
         await RefreshApplications();
 
