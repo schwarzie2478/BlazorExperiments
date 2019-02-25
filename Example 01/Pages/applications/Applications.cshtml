@@ -1,0 +1,44 @@
+﻿@page "/application"
+
+
+@inject Example_01.Services.ApplicationState state
+<nav>
+    <div class="nav-wrapper orange">
+        <a href="#" class="brand-logo">Applications Overview</a>
+    </div>
+</nav>
+
+<ApplicationListComponent Applications=@MyApplications  RefreshApplications=@RefreshApplications></ApplicationListComponent>
+
+<button class="waves-effect waves-light btn" onclick="@(async () => await OnCreateApplication())">Add Application</button>
+
+@functions
+{
+    IEnumerable<Application>  MyApplications = new List<Application>();
+
+    protected override void OnInit()
+    {
+        state.OnChange += StateHasChanged;
+    }
+
+    public  async Task RefreshApplications()
+    {
+        await state.GetApplications();
+        MyApplications = state.ApplicationSearchResult;
+        StateHasChanged();        
+    }
+    protected override async Task OnInitAsync()
+    {
+        await RefreshApplications();
+    }
+    protected async Task  OnCreateApplication()
+    {
+        var application = new Application();
+        application.Name = DateTime.Now.Ticks.ToString();
+        application.Description = $"Applicaiton Created at {DateTime.Now.ToString()}!";
+        await state.CreateApplicaton(application);
+        await RefreshApplications();
+
+    }
+
+}

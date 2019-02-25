@@ -30,6 +30,7 @@ namespace Example_01.Services
         }
 
         public IEnumerable<Application> ApplicationSearchResult { get; private set; }
+        public Application ApplicationResult { get; private set; }
         public bool SearchInProgress { get; private set; }
         public bool SuppliedIdIsValid { get; private set; } = true;
 
@@ -55,6 +56,11 @@ namespace Example_01.Services
             SearchInProgress = false;
             NotifyStateChanged();
         }
+        public async Task GetApplication(int id)
+        {
+            ApplicationResult = await http.GetJsonAsync<Application>($"{ApplicationsServiceUrl}/api/application/{id}");
+            NotifyStateChanged();
+        }
 
         public async Task CreateApplicaton(Application newApplication)
         {
@@ -75,6 +81,12 @@ namespace Example_01.Services
             await http.SendJsonAsync(HttpMethod.Put, $"{ApplicationsServiceUrl}/api/application/{application.Id}", application); 
             NotifyStateChanged();
 
+        }
+
+        public async Task CreateApplicationRole(Application application, ApplicationRole role)
+        {
+            await http.SendJsonAsync(HttpMethod.Post, $"{ApplicationsServiceUrl}/api/application/{application.Id}/applicationrole", role);
+            NotifyStateChanged();
         }
         private void NotifyStateChanged() => OnChange?.Invoke();
     }

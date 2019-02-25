@@ -1,0 +1,40 @@
+@inject Example_01.Services.ApplicationState state
+
+@if (Applications != null)
+{
+<ul class="collection">
+    @foreach (var application in Applications)
+    {
+        <li class="collection-item">
+                     <a  class="title" href="application\@application.Id">@application.Name</a>                 
+                     <p  >@application.Description</p> 
+                    <div >
+                        <button class="waves-effect waves-light btn" onclick="@(async () => await OnUpdateApplication(application))">Update</button>
+                        <button class="waves-effect waves-light btn" onclick="@(async () => await OnDeleteApplications(application.Id))">Delete</button>
+                    </div>
+        </li>            
+    }
+</ul>
+}else
+{
+    <H2>No applications created</H2>
+}
+    @functions
+    {
+        [Parameter]
+        public IEnumerable<Application> Applications {get; set;}
+        
+        [Parameter]
+        private Func<Task> RefreshApplications { get; set; }
+
+        protected async Task OnDeleteApplications(int id)
+        {
+            await state.DeleteApplication(id);
+            await RefreshApplications();
+        }
+        protected async Task OnUpdateApplication(Application application)
+        {
+            await state.UpdateApplication(application);
+            await RefreshApplications();
+        }            
+    }

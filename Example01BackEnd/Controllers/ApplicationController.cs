@@ -24,7 +24,7 @@ namespace Example01BackEnd.Controllers
         [HttpGet]
         public async Task<IEnumerable<Application>> OnGetAsync()
         {
-            return await _db.Applications.ToListAsync();
+            return await _db.Applications.Include( app => app.ApplicationRoles).ToListAsync<Application>();
         }
 
         // GET api/<controller>/5
@@ -54,6 +54,25 @@ namespace Example01BackEnd.Controllers
             var application = new Application();
             application.Id = id;
             _db.Applications.Attach(application).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+        }
+
+        //ApplicationRoles Management
+        [Route("{id}/applicationrole")]
+        [HttpPost]
+        public async Task OnCreateApplicationRole(int id,  ApplicationRole role)
+        {
+            var application = _db.Applications.Include(app => app.ApplicationRoles).First(app => app.Id == id);
+            application.ApplicationRoles.Add(role);
+            await _db.SaveChangesAsync();
+        }
+        [Route("{id}/applicationrole")]
+        [HttpDelete]
+        public async Task OnDeleteApplicationRole(int id, ApplicationRole role)
+        {
+            var application = _db.Applications.Include(app => app.ApplicationRoles).First(app => app.Id == id);
+            var roleDelete = application.ApplicationRoles.Where(r => r.Id == role.Id).First();
+            application.ApplicationRoles.Remove(roleDelete);
             await _db.SaveChangesAsync();
         }
     }

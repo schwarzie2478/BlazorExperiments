@@ -9,7 +9,7 @@ namespace Example_01
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ApplicationState>();
-        }
+        } 
 
         public void Configure(IComponentsApplicationBuilder app)
         {
