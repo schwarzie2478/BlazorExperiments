@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Swashbuckle.AspNetCore.Swagger;
@@ -27,11 +28,7 @@ namespace Example01BackEnd
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-
-        }
-        public Startup(IConfiguration configuration , ILogger<Startup> logger)
+        public Startup(IConfiguration configuration )
         {
             Configuration = configuration;
 
@@ -51,7 +48,7 @@ namespace Example01BackEnd
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
             var connectionString = @"Server=(localdb)\mssqllocaldb;Database=Example01;Trusted_Connection=True;ConnectRetryCount=0";
